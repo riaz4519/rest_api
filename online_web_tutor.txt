@@ -1,0 +1,7 @@
+1.
+    REST - representational state transfer
+    API  - Application Programming interface
+
+2.Tools we need and folder structure
+
+    1.postman
