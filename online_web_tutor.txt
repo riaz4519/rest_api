@@ -5,3 +5,13 @@
 2.Tools we need and folder structure
 
     1.postman
+
+3.Database Table
+
+    -new mysqli(hostname,user,password,database)
+
+    -connect_errno if have any connection error
+
+    -connect_error is the connection message
+
+4.
