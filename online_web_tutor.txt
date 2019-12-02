@@ -14,4 +14,17 @@
 
     -connect_error is the connection message
 
-4.
+4.create method
+
+        $query = "INSERT INTO ".$this->table_name."
+        SET name= ?,email =?,mobile=?";
+
+        -prepare
+
+        -htmlspecialchars
+        -strip_tags
+
+        -execute
+
+5.Create static data
+
