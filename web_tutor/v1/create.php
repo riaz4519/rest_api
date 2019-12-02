@@ -1,4 +1,15 @@
 <?php
+/*include headers*/
+//setting origin - it means we can allow from any origin
+header("Access-Control-Allow-Origin: *");
+
+//defining te content type
+header("Content-type: application/json; charset: UTF-8");
+
+//allowing methods
+header("Access-Control-Allow-Methods: POST");
+
+/*end of headers*/
 // include database.php
 include_once("../config/Database.php");
 //include student.php
@@ -18,24 +29,56 @@ $student = new Student($connection);
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 
-    //submit data
+    //receiving data from the post request
 
-    $student->name = "fahim";
-    $student->email = "riaz.i3216@gmail.com";
-    $student->mobile = "8801681562828";
+    $data = json_decode(file_get_contents("php://input"));
 
-    //create data
+    if (!empty($data) && !empty($data->name) && !empty($data->email) && !empty($data->mobile)){
+        //submit data
 
-    if ($student->create_data()){
+        $student->name = $data->name;
+        $student->email = $data->email;
+        $student->mobile = $data->mobile;
 
-        echo "student has been created";
-    }else{
+        //create data
 
-        echo "Failed to insert data";
+        if ($student->create_data()){
+
+            //return code
+            http_response_code(200);  //means we are returning ok value
+            echo json_encode(array(
+                "status" => 1,
+                "message" => "student has been created"
+            ));
+
+        }else{
+
+            //return code
+            http_response_code(500);  //internal server error
+            echo json_encode(array(
+                "status" => 0,
+                "message" => "failed to create student"
+            ));
+        }
     }
+    else{
+        //return code
+        http_response_code(404);  //page not found
+        echo json_encode(array(
+            "status" => 0,
+            "message" => "All values needed"
+        ));
+    }
+
+
 }else{
 
-    echo "Access Denied";
+    //return code
+    http_response_code(503);  //means service unavailable
+    echo json_encode(array(
+        "status" => 0,
+        "message" => "access denied"
+    ));
 
 }
 

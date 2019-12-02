@@ -1,3 +1,4 @@
+Link:https://www.youtube.com/watch?v=vaXtW_qujoQ&list=PLT9miexWCpPWgAI1UMj5wTes9zpxc9EGP&index=6
 1.
     REST - representational state transfer
     API  - Application Programming interface
@@ -27,4 +28,44 @@
         -execute
 
 5.Create static data
+
+
+6.Setting header and data via postman
+
+    -sending request via post man now we will make request with curl next
+
+    -for just sending a request we don't need the headers
+
+    -but when we are sending or passing data with the request we need to pass header on the script
+
+
+    steps:
+        1.set header
+            //setting origin - it means we can allow from any origin
+            header("Access-Control-Allow-Origin: *");
+
+            //defining te content type
+            header("Content-type: application/json; charset: UTF-8");
+
+            //allowing methods
+            header("Access-Control-Allow-Methods: POST");
+
+        2.set method type and receive the datas
+
+             $data = json_decode(file_get_contents("php://input"));
+
+             $data->name
+
+         3.create and if error send with response code and json_encode
+
+                //return code
+                http_response_code(200);  //means we are returning ok value
+                echo json_encode(array(
+                    "status" => 1,
+                    "message" => "student has been created"
+                ));
+
+
+
+
 
