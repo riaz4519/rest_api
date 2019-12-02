@@ -11,6 +11,6 @@ class Student
     public $mobile;
 
     private $conn;
-    private $table_name; 
+    private $table_name;
 
 }
