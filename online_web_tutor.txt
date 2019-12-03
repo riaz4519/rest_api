@@ -66,6 +66,124 @@ Link:https://www.youtube.com/watch?v=vaXtW_qujoQ&list=PLT9miexWCpPWgAI1UMj5wTes9
                 ));
 
 
+7.List All data Api
+
+    -allow the header to be get request and content type remove
+
+    -sql
+                $sql = "SELECT * from ".$this->table_name;
+
+                $std_obj = $this->conn->prepare($sql);
+
+                //execute query
+
+                $std_obj->execute();
+
+                return $std_obj->get_result();
+
+    -format data
+
+        if ($_SERVER['REQUEST_METHOD'] == "GET"){
+
+            $data = $student->get_all_data();
+
+            if ($data->num_rows >0){
+                //we have some data inside table
+
+                $students ["records"] = array();
+
+                while ($row = $data->fetch_assoc()){
+
+                    array_push( $students ["records"],array(
+
+                        "id" => $row['id'],
+                        "name" => $row['name'],
+                        "email" => $row['email'],
+                        "mobile" => $row['mobile'],
+                        "status" => $row['id'],
+                        "created_at" =>date("Y-m-d",strtotime($row['created_at'])),
 
 
+                    ));
+
+                }
+
+                //returning the value
+                http_response_code('200');//ok
+                echo json_encode(array(
+
+                    'status' => 1,
+                    "data"   => $students['records'],
+
+                ));
+
+            }
+
+        }else{
+
+            http_response_code('503');//service unavailable
+            echo json_encode(array(
+                "status" =>0,
+                'message' =>"access denied",
+            ));
+
+        }
+
+8.Read single Data Api | Method Post
+
+    -sql
+        $sql_query = "SELECT * from ".$this->table_name." WHERE id = ?";
+
+        //prepare statement
+        $obj = $this->conn->prepare($sql_query);
+
+        $obj->bind_param("i",$this->id);//bind parameters with prepare statement
+
+        $obj->execute();
+
+        $data = $obj->get_result();
+
+        return $data->fetch_assoc();
+
+    -format data
+        if ($_SERVER['REQUEST_METHOD'] === "POST"){
+
+            $param = json_decode(file_get_contents('php://input'));
+
+            if (!empty($param->id)){
+
+                $student->id = $param->id;
+
+                $student_data = $student->get_single_student();
+
+                if (!empty($student_data)){
+
+                    http_response_code(200);
+                    echo json_encode(array(
+                        "status" =>1,
+                        'data'=>$student_data,
+                    ));
+                }else{
+                    http_response_code(404);//data not found
+                    echo json_encode(array(
+
+                        "status" => 0,
+                        "message" => "Data not found"
+
+                    ));
+
+                }
+            }
+
+
+        }else{
+
+            http_response_code('503'); //service unavailable
+            echo json_encode(array(
+               "status" => 0,
+               "message" => "Access Denied",
+            ));
+
+
+        }
 
