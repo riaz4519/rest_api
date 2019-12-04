@@ -440,6 +440,8 @@ Link:https://www.youtube.com/watch?v=vaXtW_qujoQ&list=PLT9miexWCpPWgAI1UMj5wTes9
         require "vendor/autoload.php"
         use \Firebase\JWT\JWT;
 
+13.Table Structure | Define class file
+
 
 
 
