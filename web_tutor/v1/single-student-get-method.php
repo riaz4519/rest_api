@@ -31,34 +31,26 @@ if ($_SERVER['REQUEST_METHOD'] === "GET"){
 
         $student->id = $student_id;
 
-        if ($student->delete_student()){
+        $student_data = $student->get_single_student();
+
+        if (!empty($student_data)){
 
             http_response_code(200);
             echo json_encode(array(
-
-                "status" => 1,
-                "message" => "Student Deleted Successfully"
-
+                "status" =>1,
+                'data'=>$student_data,
             ));
-
-
         }else{
-            http_response_code(500);
+            http_response_code(404);//data not found
             echo json_encode(array(
-                "status"=>0,
-                "message" =>"Failed to delete student",
+
+                "status" => 0,
+                "message" => "Data not found"
+
             ));
 
         }
-
-    }else{
-        http_response_code(404);
-        echo json_encode(array(
-            "status"=>0,
-            "message"=>"All data needed"
-        ));
     }
-
 
 
 }else{

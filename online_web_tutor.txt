@@ -187,3 +187,259 @@ Link:https://www.youtube.com/watch?v=vaXtW_qujoQ&list=PLT9miexWCpPWgAI1UMj5wTes9
 
         }
 
+9.Read single Data Api Method | GET
+
+    -headers - we don't need the content type for this
+        /*include headers*/
+        //setting origin - it means we can allow from any origin
+        header("Access-Control-Allow-Origin: *");
+
+        //allowing methods
+        header("Access-Control-Allow-Methods: GET");
+
+    -and we do not need file_get_contents for this
+
+        json_decode(file_get_contents("php://input"))
+
+    -codes for get request
+        if ($_SERVER['REQUEST_METHOD'] === "GET"){
+
+            $student_id = isset($_GET['id']) ? intval($_GET['id']) : "";
+
+            if (!empty($student_id)){
+
+                $student->id = $student_id;
+
+                $student_data = $student->get_single_student();
+
+                if (!empty($student_data)){
+
+                    http_response_code(200);
+                    echo json_encode(array(
+                        "status" =>1,
+                        'data'=>$student_data,
+                    ));
+                }else{
+                    http_response_code(404);//data not found
+                    echo json_encode(array(
+
+                        "status" => 0,
+                        "message" => "Data not found"
+
+                    ));
+
+                }
+            }
+
+
+        }else{
+
+            http_response_code('503'); //service unavailable
+            echo json_encode(array(
+                "status" => 0,
+                "message" => "Access Denied",
+            ));
+
+
+        }
+
+10.Update data Api method | POST
+
+    -always remember to sanitize data when creating and updating
+
+    -always add the sending type
+        -post always
+        Content-type : application/json
+
+    -sql
+
+        //query
+        $update_query = "UPDATE ".$this->table_name." set name = ?,email = ?, mobile = ? WHERE id = ?";
+
+        //prepare statement
+
+        $query_object = $this->conn->prepare($update_query);
+
+
+        //sanitize input variable =>basically removes extra character like special symbols
+
+        $this->name = htmlspecialchars(strip_tags($this->name));
+        $this->email = htmlspecialchars(strip_tags($this->email));
+        $this->mobile = htmlspecialchars(strip_tags($this->mobile));
+        $this->id = htmlspecialchars(strip_tags($this->id));
+
+
+        $query_object->bind_param("sssi",$this->name,$this->email,$this->mobile,$this->id);
+        //execute
+        if ($query_object->execute()){
+
+
+            return true;
+
+        }else{
+            return false;
+        }
+
+    -call from update
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+            $data = json_decode(file_get_contents("php://input"));
+
+            if (!empty($data->name) &&!empty($data->email) &&!empty($data->mobile) &&!empty($data->id) ){
+
+                $student->name = $data->name;
+                $student->email = $data->email;
+                $student->mobile = $data->mobile;
+                $student->id = $data->id;
+
+                if ($student->update_student()){
+                    http_response_code(200);//server error
+                    echo json_encode(array(
+                        "status" =>1,
+                        "message" => "Student data successfully updated"
+                    ));
+                }else{
+                    http_response_code(500);//server error
+                    echo json_encode(array(
+                        "status" =>0,
+                        "message" => "Failed to update data"
+                    ));
+                }
+
+
+            }else{
+
+                http_response_code(404);//server error
+                echo json_encode(array(
+                    "status" =>0,
+                    "message" => "All Data needed!!"
+                ));
+
+
+            }
+
+
+
+
+        }else{
+
+            http_response_code(503);//service unavailable
+            echo json_encode(array(
+
+                "status" => 0,
+                "message" => "Access Denied"
+
+            ));
+
+        }
+
+11.Delete Data api Method | GET
+
+    -sql
+
+        $delete_query = "DElETE FROM ".$this->table_name." WHERE id = ?";
+
+        //prepare statement
+
+        $delete_obj = $this->conn->prepare($delete_query);
+        //sanitize input
+        $this->id = htmlspecialchars(strip_tags($this->id));
+
+        //bind parameter
+        $delete_obj->bind_param("i",$this->id);
+
+        //executing query
+
+        if ($delete_obj->execute()){
+
+            return true;
+        }else{
+
+            return false;
+        }
+
+    -calling and view
+        if ($_SERVER['REQUEST_METHOD'] === "GET"){
+
+            $student_id = isset($_GET['id']) ? intval($_GET['id']) : "";
+
+            if (!empty($student_id)){
+
+                $student->id = $student_id;
+
+                if ($student->delete_student()){
+
+                    http_response_code(200);
+                    echo json_encode(array(
+
+                        "status" => 1,
+                        "message" => "Student Deleted Successfully"
+
+                    ));
+
+
+                }else{
+                    http_response_code(500);
+                    echo json_encode(array(
+                        "status"=>0,
+                        "message" =>"Failed to delete student",
+                    ));
+
+                }
+
+            }else{
+                http_response_code(404);
+                echo json_encode(array(
+                    "status"=>0,
+                    "message"=>"All data needed"
+                ));
+            }
+
+
+
+        }else{
+
+            http_response_code('503'); //service unavailable
+            echo json_encode(array(
+                "status" => 0,
+                "message" => "Access Denied",
+            ));
+
+
+        }
+
+12.Install PHP JWT Library REST API.
+
+    -jwt - json web token
+
+    -jwt
+        -header
+        -payload
+        -signature
+
+    -structure : header.payload.signature
+
+    - php-jwt is a php library that allows you to encode and decode json web tokens in php conforming to RFC 7519
+
+        RFC 7519 - indicates about sensitive information in a secure manner to our parties
+
+        -required
+            -php 7
+            -composer
+            -myslq
+
+    -install jwt
+
+            -go to that project root folder
+
+            -composer require firebase/php-jwt
+
+    -require to all file
+
+        require "vendor/autoload.php"
+        use \Firebase\JWT\JWT;
+
+
+
+

@@ -90,6 +90,66 @@ class Student
 
 
     }
+    
+    //update student information
+
+    public function update_student()
+    {
+
+        //query
+        $update_query = "UPDATE ".$this->table_name." set name = ?,email = ?, mobile = ? WHERE id = ?";
+
+        //prepare statement
+
+        $query_object = $this->conn->prepare($update_query);
+
+
+        //sanitize input variable =>basically removes extra character like special symbols
+
+        $this->name = htmlspecialchars(strip_tags($this->name));
+        $this->email = htmlspecialchars(strip_tags($this->email));
+        $this->mobile = htmlspecialchars(strip_tags($this->mobile));
+        $this->id = htmlspecialchars(strip_tags($this->id));
+
+
+        $query_object->bind_param("sssi",$this->name,$this->email,$this->mobile,$this->id);
+        //execute
+        if ($query_object->execute()){
+
+
+            return true;
+
+        }else{
+            return false;
+        }
+        
+    }
+
+    //delete student
+    public function delete_student(){
+
+        $delete_query = "DElETE FROM ".$this->table_name." WHERE id = ?";
+
+        //prepare statement
+
+        $delete_obj = $this->conn->prepare($delete_query);
+        //sanitize input
+        $this->id = htmlspecialchars(strip_tags($this->id));
+
+        //bind parameter
+        $delete_obj->bind_param("i",$this->id);
+
+        //executing query
+
+        if ($delete_obj->execute()){
+
+            return true;
+        }else{
+
+            return false;
+        }
+
+    }
 
 
 }
