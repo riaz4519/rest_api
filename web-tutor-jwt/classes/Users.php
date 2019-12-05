@@ -26,5 +26,31 @@ class Users{
 
     }
 
+    public function create_user(){
+
+        $user_query = "INSERT INTO ".$this->users_tbl." SET name = ?,email = ?,password = ?";
+
+        //prepare statement
+
+        $user_obj = $this->conn->prepare($user_query);
+
+        //bind parameters
+
+        $user_obj->bind_param('sss',$this->name,$this->email,$this->password);
+
+        //execute query
+
+        if ($user_obj->execute()){
+
+            return true;
+
+        }else{
+
+            return false;
+
+        }
+
+    }
+
 
 }

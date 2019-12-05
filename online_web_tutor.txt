@@ -443,5 +443,12 @@ Link:https://www.youtube.com/watch?v=vaXtW_qujoQ&list=PLT9miexWCpPWgAI1UMj5wTes9
 13.Table Structure | Define class file
 
 
+14.Create User Api Method | Post
+
+    -created method for creating user
+
+        password_hash($data,PASSWORD_DEFAULT)
+
+
 
 

@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         //create data
 
-        if ($student->create_data()){
+        if ($student->create()){
 
             //return code
             http_response_code(200);  //means we are returning ok value
