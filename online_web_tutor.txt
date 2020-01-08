@@ -3,6 +3,13 @@ Link:https://www.youtube.com/watch?v=vaXtW_qujoQ&list=PLT9miexWCpPWgAI1UMj5wTes9
     REST - representational state transfer
     API  - Application Programming interface
 
+    -rest api is a tool or set of rules for talking to another device
+    -methods
+        -get
+        -post
+        -put/patch
+        -delete
+
 2.Tools we need and folder structure
 
     1.postman
@@ -22,12 +29,19 @@ Link:https://www.youtube.com/watch?v=vaXtW_qujoQ&list=PLT9miexWCpPWgAI1UMj5wTes9
 
         -prepare
 
+            $obj = $this->conn->prepare($query)
         -htmlspecialchars
         -strip_tags
+
+        -bind_param
+
+            $obj->bind_param("sss",...)
 
         -execute
 
 5.Create static data
+
+    -php request method
 
 
 6.Setting header and data via postman
