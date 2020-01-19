@@ -52,5 +52,24 @@ class Users{
 
     }
 
+    public function check_email(){
+
+        $email_query = "SELECT * from ".$this->users_tbl." where email= ?";
+
+        $user_obj = $this->conn->prepare($email_query);
+
+        $user_obj->bind_param('s',$this->email);
+
+        if ($user_obj->execute()){
+
+            $data = $user_obj->get_result();
+
+            return $data->fetch_assoc();
+
+        }
+
+        return array();
+    }
+
 
 }

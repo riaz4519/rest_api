@@ -466,6 +466,41 @@ Link:https://www.youtube.com/watch?v=vaXtW_qujoQ&list=PLT9miexWCpPWgAI1UMj5wTes9
 
         password_hash($data,PASSWORD_DEFAULT)
 
+15.Email existence check email api
+
+
+16. JWT Token structure details
+
+    -jwt website
+
+    -jwt structure
+        xxxxx.yyyyy.zzzzz(header.payload.signature)
+
+    -header
+
+         Header : a = Base64Url(
+                     {
+                          "alg": "HS256",
+                          "typ": "JWT"
+                     })
+         Payload : b = Base64Url(
+                    {
+                      "sub": "1234567890",
+                      "name": "John Doe",
+                      "admin": true
+                    }
+
+            )
+
+          Signature :
+            HMACSHA256(
+              base64UrlEncode(header) + "." +
+              base64UrlEncode(payload),
+              secret)
+
+          HMACSHA256 (a + "." + b
+
+
 
 
 

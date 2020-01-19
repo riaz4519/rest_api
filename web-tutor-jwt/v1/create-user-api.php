@@ -36,28 +36,46 @@ if ($_SERVER['REQUEST_METHOD'] == "POST"){
         $users_obj->email = $data->email;
         $users_obj->password = password_hash($data->password,PASSWORD_DEFAULT);
 
-        //calling creating function for creating user
+        //check email
 
-        if ($users_obj->create_user()){
+        $email_data = $users_obj->check_email();
 
-            http_response_code(200);//ok
+        if (!empty($email_data)){
+
+            http_response_code(404);
             echo json_encode(array(
-               "status" => 1,
-               "message" => "User has been created",
+               "status" =>0,
+                "message" => "User Already Exits"
             ));
 
         }else{
 
-            http_response_code(500);
+            if ($users_obj->create_user()){
 
-            echo json_encode(array(
+                http_response_code(200);//ok
+                echo json_encode(array(
+                    "status" => 1,
+                    "message" => "User has been created",
+                ));
 
-                "status" => 0,
-                "message" => "Failed to save user",
+            }
+            else{
 
-            ));
+                http_response_code(500);
+
+                echo json_encode(array(
+
+                    "status" => 0,
+                    "message" => "Failed to save user",
+
+                ));
+
+            }
 
         }
+
+        //calling creating function for creating user
+
 
         
 
